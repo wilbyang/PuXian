@@ -22,6 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -57,6 +60,7 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private DrawerListAdapter adapter;
 
     public NavigationDrawerFragment() {
     }
@@ -89,14 +93,34 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        mDrawerListView = (ListView) rootView.findViewById(R.id.navList);
+        List<NavItem> navItems = new ArrayList<>();
+        navItems.add(new NavItem("Home1", "Meetup destination", R.drawable.ic_drawer));
+        navItems.add(new NavItem("Home2", "Meetup destination", R.drawable.ic_drawer));
+        navItems.add(new NavItem("Home3", "Meetup destination", R.drawable.ic_drawer));
+
+        adapter = new DrawerListAdapter(getActivity(), navItems);
+
+
+        mDrawerListView.setAdapter(adapter);
+        //RecyclerView rv = (ListView)rootView.findViewById(R.id.rv);
+
+
+        //mDrawerListView = (ListView) inflater.inflate(
+        //        R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
         });
+
+
+
+        /*
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
@@ -106,8 +130,9 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                 }));
+                */
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        return rootView;
     }
 
     public boolean isDrawerOpen() {
